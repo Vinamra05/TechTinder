@@ -1,23 +1,21 @@
-export const adminAuth = (req, res, next) => {
-    console.log("admin auth middleware");
-    const token="xyz";
-    const isAdminAuthorized = token === "xyz";
-    if(!isAdminAuthorized){
-        res.status(401).send("Unauthorized");
-    }else{
-        next();
-    
+import jwt from "jsonwebtoken";
+import userModel from "../models/user.js";
+export const userAuth = async (req, res, next) => {
+  try {
+    const { token } = req.cookies;
+    if (!token) {
+      throw new Error("Token is not valid!!");
     }
+    const decoded = await jwt.verify(token, "Techtinder@123");
+    const { _id } = decoded;
+    const user = await userModel.findById(_id);
+    if (!user) {
+      throw new Error("User Does not Exist");
+    } else {
+        req.user = user;
+      next();
+    }
+  } catch (err) {
+    res.status(400).send("ERROR: " + err.message);
+  }
 };
-export const userAuth = (req, res, next) => { 
-    console.log("user auth is getting called");
-    const token="xyz";
-    const isUserAuthorized = token === "xyz";
-    if(!isUserAuthorized){
-        res.status(401).send("Unauthorized");
-    }else{
-        next();
-    } 
-};
-
- 
