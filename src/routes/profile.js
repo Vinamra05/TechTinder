@@ -38,19 +38,36 @@ profileRouter.patch('/profile/edit', userAuth, async (req, res) => {
 
 profileRouter.patch('/profile/update-password', userAuth, async (req, res) => {
   const { oldPassword, newPassword } = req.body;
+
+  // Basic input validation
+  if (!oldPassword || !newPassword) {
+    return res.status(400).json({ error: "Old and new passwords are required." });
+  }
+
   try {
     const loggedInUser = req.user;
-    const isMatch = await bcrypt.compare(oldPassword, loggedInUser.password);
-    if (!isMatch) {
-      throw new Error("Invalid Password");
+
+    if (!loggedInUser) {
+      return res.status(401).json({ error: "Unauthorized. User not found." });
     }
 
+    // Check if old password matches
+    const isMatch = await bcrypt.compare(oldPassword, loggedInUser.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid current password." });
+    }
+
+    // Hash new password and update
     const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await userModel.findByIdAndUpdate(
+      loggedInUser._id,
+      { password: hashedPassword },
+      { new: true, runValidators: false }
+    );
 
-    await userModel.findByIdAndUpdate(loggedInUser._id, { password: hashedPassword }, { new: true, runValidators: false });
-
-    res.send("Password Updated Successfully");
+    return res.status(200).json({ message: "Password updated successfully." });
   } catch (err) {
-    res.status(400).send("ERROR: " + err.message);
+    console.error("Error updating password:", err);
+    return res.status(500).json({ error: "Internal server error." });
   }
 });
