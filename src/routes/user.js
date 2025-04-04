@@ -54,6 +54,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
   }
 });
 
+//code along api as like akshay saini
 // userRouter.get("/feed", userAuth, async (req, res) => {
 //   try {
 
@@ -124,7 +125,7 @@ userRouter.get("/feed", userAuth, async (req, res) => {
       .limit(limit);
 
     res.json({ data: users });
-  } catch (error) {
+  } catch (error) { 
     res.status(400).send({
       message: error.message,
     });

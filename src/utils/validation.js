@@ -24,6 +24,7 @@ export const validateEditProfileData = (req) => {
         "password",
         "about",
         "age",
+        "gender",
         "skills",
     ];
 
