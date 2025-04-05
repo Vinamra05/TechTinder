@@ -25,7 +25,7 @@ app.use("/",userRouter);
 
  
 
-connectDB()
+connectDB();
 
 
 app.listen(3000, () => {
