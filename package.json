@@ -1,7 +1,7 @@
 {
   "name": "techtinder",
   "version": "1.0.0",
-  "description": "Tinder for developers",
+  "description": "Match Maker for developers",
   "main": "index.js",
   "scripts": {
     "start": "node src/app.js",
