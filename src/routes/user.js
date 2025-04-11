@@ -12,7 +12,7 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
     const connectionRequests = await ConnectionRequestModel.find({
       toUserId: loggedInUser._id,
       status: "interested",
-    }).populate("fromUserId", USER_SAFE_DATA);
+    }).populate("fromUserId", USER_SAFE_DATA).then(reqs => reqs.filter(r => r.fromUserId !== null));;
     res.json({
       message: "Data fetched - User Requests",
       data: connectionRequests,
@@ -54,7 +54,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
   }
 });
 
-//code along api as like akshay saini
+//code along Akshay
 // userRouter.get("/feed", userAuth, async (req, res) => {
 //   try {
 
@@ -92,7 +92,7 @@ userRouter.get("/feed", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
     const page = parseInt(req.query.page) || 1;
-    let limit = parseInt(req.query.limit) || 10;
+    let limit = parseInt(req.query.limit) || 50;
     limit = limit > 50 ? 50 : limit;
     const skip = (page - 1) * limit;
     //added by my own for the filter search for specfic skills user will have similar if apply filter
