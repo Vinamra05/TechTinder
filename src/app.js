@@ -6,6 +6,9 @@ import {authRouter} from "./routes/auth.js";
 import {requestRouter} from "./routes/request.js";
 import {profileRouter} from "./routes/profile.js"; 
 import {userRouter} from "./routes/user.js";
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 const app = express();
 app.use(cors({
@@ -28,6 +31,6 @@ app.use("/",userRouter);
 connectDB();
 
 
-app.listen(3000, () => {
-  console.log("server listening on Port:3000");
+app.listen(process.env.PORT, () => {
+  console.log("server listening on Port:", process.env.PORT);
 });

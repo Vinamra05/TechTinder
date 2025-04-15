@@ -3,6 +3,9 @@ import { userAuth } from "../middlewares/auth.js";
 import ConnectionRequest from "../models/connectionRequest.js";
 import userModel from "../models/user.js";
 export const requestRouter = express.Router();
+import sendEmail from "../utils/sendEmail.js";
+
+
 
 requestRouter.post(
   "/request/send/:status/:touserid",
@@ -42,6 +45,11 @@ requestRouter.post(
         status,
       });
       const data = await connectionRequest.save();
+
+      const emailRes = await sendEmail.run("You Got a new Friend Request from " + req.user.firstName,  req.user.firstName + " is " + status + " in " + toUser.firstName);
+
+      console.log("Email Response: ", emailRes);
+
       res.json({
         message:
           req.user.firstName + " is " + status + " in " + toUser.firstName,

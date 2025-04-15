@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const userSchema = new Schema(
   {
@@ -96,7 +98,7 @@ const userSchema = new Schema(
 userSchema.methods.getJWT = async function () {
   const user = this;
    // yaha pe arrow function nh bna skte KYUKI THIS USE KRNA HAI  VO Usme nh hoga or yaha this isliye use kiya hi kyuki ye schema ka instance hai to har instance ko refer krne ke liye use kiya hai
-  const token = await jwt.sign({ _id: user._id }, "Techtinder@123", {
+  const token = await jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
   return token;
