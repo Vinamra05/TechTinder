@@ -5,8 +5,6 @@ import userModel from "../models/user.js";
 export const requestRouter = express.Router();
 import sendEmail from "../utils/sendEmail.js";
 
-
-
 requestRouter.post(
   "/request/send/:status/:touserid",
   userAuth,
@@ -45,10 +43,23 @@ requestRouter.post(
         status,
       });
       const data = await connectionRequest.save();
-
-      const emailRes = await sendEmail.run("You Got a new Friend Request from " + req.user.firstName,  req.user.firstName + " is " + status + " in " + toUser.firstName);
-
-      console.log("Email Response: ", emailRes);
+      if (status === "interested") {
+        const subject =
+          "👀 Someone’s interested in connecting with you on TechTinder!";
+        const body = `
+  <p style="font-size: 16px; line-height: 1.6; margin: 0;">
+    <strong>${req.user.firstName}</strong> has sent you a connection request on <strong>TechTinder</strong> and marked you as <strong>Interested</strong>!
+  </p>
+  <p style="font-size: 16px; line-height: 1.6; margin-top: 12px;">
+    Head over to your account to view the request and respond.
+  </p>
+  <p style="font-size: 14px; margin-top: 24px;">
+    👉 <a href="https://techtinder.live" style="color: #8b5cf6; text-decoration: none; font-weight: bold;">View Request Now</a>
+  </p>
+`;
+        const emailRes = await sendEmail.run(subject, body);
+        // console.log("Email Response: ", emailRes);
+      }
 
       res.json({
         message:
@@ -68,7 +79,7 @@ requestRouter.post(
   async (req, res) => {
     try {
       const loggedInUser = req.user;
-      const {status,requestId} = req.params;
+      const { status, requestId } = req.params;
       const allowedStatus = ["accepted", "rejected"];
       if (!allowedStatus.includes(status)) {
         return res.status(400).json({
@@ -97,5 +108,3 @@ requestRouter.post(
     }
   }
 );
-
-  

@@ -7,6 +7,7 @@ import {requestRouter} from "./routes/request.js";
 import {profileRouter} from "./routes/profile.js"; 
 import {userRouter} from "./routes/user.js";
 import dotenv from 'dotenv';
+import "./utils/cronjob.js";
 dotenv.config();
 
 
