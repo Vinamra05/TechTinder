@@ -10,7 +10,7 @@ authRouter.post("/signup", async (req, res) => {
   // console.log(req.body);
   try {
     validateSignUpData(req);
-    const { firstName, password } = req.body;
+    const { emailId,firstName, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new userModel({
       ...req.body,
@@ -37,12 +37,12 @@ authRouter.post("/signup", async (req, res) => {
         </p>
         <p style="font-size: 14px; margin-top: 24px;">
             👉 <a href="https://techtinder.live" style="color: #8b5cf6; text-decoration: none; font-weight: bold;">Launch TechTinder Now</a>
-c       </p>
+                   </p>
       `;
 
-    const emailRes = await sendEmail.run(subject, body);
+    const emailRes = await sendEmail.run(subject, body,emailId);
 
-    console.log("Email sent successfully", emailRes);
+    // console.log("Email sent successfully", emailRes);
 
     res.status(201).json({ message: "User created successfully", user });
   } catch (err) {

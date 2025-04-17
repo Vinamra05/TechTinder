@@ -26,6 +26,8 @@ requestRouter.post(
           message: "User Not Found!",
         });
       }
+      // console.log(toUser);
+      const {emailId,firstName} = toUser;
       const existingRequest = await ConnectionRequest.findOne({
         $or: [
           { fromUserId, toUserId },
@@ -46,18 +48,28 @@ requestRouter.post(
       if (status === "interested") {
         const subject =
           "👀 Someone’s interested in connecting with you on TechTinder!";
-        const body = `
-  <p style="font-size: 16px; line-height: 1.6; margin: 0;">
-    <strong>${req.user.firstName}</strong> has sent you a connection request on <strong>TechTinder</strong> and marked you as <strong>Interested</strong>!
-  </p>
-  <p style="font-size: 16px; line-height: 1.6; margin-top: 12px;">
-    Head over to your account to view the request and respond.
-  </p>
-  <p style="font-size: 14px; margin-top: 24px;">
-    👉 <a href="https://techtinder.live" style="color: #8b5cf6; text-decoration: none; font-weight: bold;">View Request Now</a>
-  </p>
-`;
-        const emailRes = await sendEmail.run(subject, body);
+          const body = `
+          <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+            <p style="font-size: 16px; line-height: 1.6; margin: 0;">
+            <strong> Hey! ${firstName} 👋</strong>
+            </p>
+        
+            <p style="font-size: 16px; line-height: 1.6; margin: 16px 0 0 0;">
+              <strong>${req.user.firstName}</strong> has sent you a connection request on <strong>TechTinder</strong> and marked you as <strong>Interested</strong>!
+            </p>
+        
+            <p style="font-size: 16px; line-height: 1.6; margin: 16px 0 0 0;">
+              Head over to your account to view the request and respond.
+            </p>
+        
+            <p style="font-size: 14px; margin-top: 24px;">
+              👉 <a href="https://techtinder.live" style="color: #8b5cf6; text-decoration: none; font-weight: bold;">
+                View Request Now
+              </a>
+            </p>
+          </div>
+        `;
+        const emailRes = await sendEmail.run(subject, body,emailId);
         // console.log("Email Response: ", emailRes);
       }
 
