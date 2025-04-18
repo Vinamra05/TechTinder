@@ -20,7 +20,7 @@ cron.schedule("0 11 * * *", async () => {
     const listofEmails = [
       ...new Set(pendingRequests.map((request) => request.toUserId.emailId)),
     ];
-    // console.log("listofEmails",listofEmails);
+    console.log("listofEmails",listofEmails);
     for (const email of listofEmails) {
       const userRequests = pendingRequests.filter(
         (req) => req.toUserId.emailId === email
@@ -49,7 +49,7 @@ cron.schedule("0 11 * * *", async () => {
                     `,
           email
         );
-        // console.log("Email sent successfully",res);
+        console.log("Email sent successfully",res);
       } catch (error) {
         console.error("Error sending email:", error);
       }
