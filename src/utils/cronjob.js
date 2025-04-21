@@ -2,7 +2,7 @@ import cron from "node-cron";
 import { endOfDay, startOfDay, subDays } from "date-fns";
 import ConnectionRequestModel from "../models/connectionRequest.js";
 import sendEmail from "./sendEmail.js";
-cron.schedule("0 11 * * *", async () => {
+cron.schedule("30 6 * * *", async () => {
   // console.log('running a task every minute');
 
   try {
@@ -27,7 +27,7 @@ cron.schedule("0 11 * * *", async () => {
       );
       const userName = userRequests[0]?.toUserId?.firstName || "there";
 
-    //   console.log("userName", userName);
+      //console.log("userName", userName);
       // console.log(email);
       try {
         const res = await sendEmail.run(
@@ -49,7 +49,7 @@ cron.schedule("0 11 * * *", async () => {
                     `,
           email
         );
-        console.log("Email sent successfully",res);
+        // console.log("Email sent successfully",res);
       } catch (error) {
         console.error("Error sending email:", error);
       }

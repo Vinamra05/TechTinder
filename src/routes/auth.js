@@ -42,7 +42,7 @@ authRouter.post("/signup", async (req, res) => {
 
     const emailRes = await sendEmail.run(subject, body,emailId);
 
-    // console.log("Email sent successfully", emailRes);
+    // console.log("Signup Email sent successfully for : "+emailId, emailRes);
 
     res.status(201).json({ message: "User created successfully", user });
   } catch (err) {
