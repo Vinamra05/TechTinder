@@ -2,11 +2,11 @@ import cron from "node-cron";
 import { endOfDay, startOfDay, subDays } from "date-fns";
 import ConnectionRequestModel from "../models/connectionRequest.js";
 import sendEmail from "./sendEmail.js";
-cron.schedule("30 6 * * *", async () => {
+cron.schedule("0 11 * * *", async () => {
   // console.log('running a task every minute');
 
   try {
-    const yesterday = subDays(new Date(), 1);
+    const yesterday = subDays(new Date(), 0);
     const yesterdayStart = startOfDay(yesterday);
     const yesterdayEnd = endOfDay(yesterday);
     const pendingRequests = await ConnectionRequestModel.find({
@@ -49,7 +49,7 @@ cron.schedule("30 6 * * *", async () => {
                     `,
           email
         );
-        // console.log("Email sent successfully",res);
+        // console.log("reminder Email sent successfully",res);
       } catch (error) {
         console.error("Error sending email:", error);
       }
@@ -57,4 +57,7 @@ cron.schedule("30 6 * * *", async () => {
   } catch (error) {
     console.error("Error executing cron job:", error);
   }
+}, {
+  scheduled: true,
+  timezone: "Asia/Kolkata"
 });

@@ -70,7 +70,7 @@ requestRouter.post(
           </div>
         `;
         const emailRes = await sendEmail.run(subject, body,emailId);
-        // console.log("Email Response: ", emailRes);
+        // console.log("rqst Email sent: ", emailRes);
       }
 
       res.json({
