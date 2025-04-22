@@ -37,12 +37,14 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
       .populate("fromUserId", USER_SAFE_DATA)
       .populate("toUserId", USER_SAFE_DATA);
     //   console.log(connectionRequests);
-    const data = connectionRequests.map((row) => {
-      if (row.fromUserId._id.toString() === loggedInUser._id.toString()) {
-        return row.toUserId;
-      }
-      return row.fromUserId;
-    });
+    const data = connectionRequests
+  .filter(row => row.fromUserId && row.toUserId) // filter out broken connections
+  .map(row => {
+    if (row.fromUserId._id.toString() === loggedInUser._id.toString()) {
+      return row.toUserId;
+    }
+    return row.fromUserId;
+  });
     // console.log(data);
     res.json({
       data,
