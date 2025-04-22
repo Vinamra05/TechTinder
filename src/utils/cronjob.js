@@ -6,7 +6,7 @@ cron.schedule("0 11 * * *", async () => {
   // console.log('running a task every minute');
 
   try {
-    const yesterday = subDays(new Date(), 0);
+    const yesterday = subDays(new Date(), 1);
     const yesterdayStart = startOfDay(yesterday);
     const yesterdayEnd = endOfDay(yesterday);
     const pendingRequests = await ConnectionRequestModel.find({
