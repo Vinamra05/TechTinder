@@ -3,6 +3,7 @@ import { validateSignUpData } from "../utils/validation.js";
 import userModel from "../models/user.js";
 import bcrypt from "bcrypt";
 import sendEmail from "../utils/sendEmail.js";
+import { userAuth } from "../middlewares/auth.js";
 
 export const authRouter = express.Router();
 
@@ -42,7 +43,7 @@ authRouter.post("/signup", async (req, res) => {
 
     const emailRes = await sendEmail.run(subject, body,emailId);
 
-    console.log("Signup Email sent successfully for : "+emailId, emailRes);
+    // console.log("Signup Email sent successfully for : "+emailId, emailRes);
 
     res.status(201).json({ message: "User created successfully", user });
   } catch (err) {
@@ -62,6 +63,12 @@ authRouter.post("/login", async (req, res) => {
       const token = await user.getJWT();
       // console.log(token);
 
+      await userModel.findByIdAndUpdate(user._id, { isOnline: true });
+
+     
+      const io = req.app.get("io");
+      io.emit("userStatusChanged", { userId: user._id, isOnline: true });
+
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000),
       });
@@ -74,7 +81,12 @@ authRouter.post("/login", async (req, res) => {
   }
 });
 
-authRouter.post("/logout", async (req, res) => {
+authRouter.post("/logout", userAuth, async (req, res) => {
+  const userId = req.user._id; // or however you track it
+  await userModel.findByIdAndUpdate(userId, { isOnline: false });
+
+  const io = req.app.get("io");
+  io.emit("userStatusChanged", { userId, isOnline: false });
   res.cookie("token", null, {
     expires: new Date(Date.now()),
   });

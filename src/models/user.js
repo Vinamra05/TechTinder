@@ -90,6 +90,10 @@ const userSchema = new Schema(
         message: "Oops! You can only add only  upto 50 skills.",
       }
     },
+    isOnline: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
