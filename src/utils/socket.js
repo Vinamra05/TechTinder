@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 import crypto from "crypto";
 import ChatModel from "../models/chat.js";
 import mongoose from "mongoose";
-import {app} from "../app.js";
+import { app } from "../app.js";
 
 import ConnectionRequestModel from "../models/connectionRequest.js";
 import userModel from "../models/user.js";
@@ -54,18 +54,18 @@ const initializeSocket = (server) => {
           });
           if (!connection) {
             console.log("Connection not found or not accepted");
-            socket.emit("notConnected", {  
+            socket.emit("notConnected", {
                 message: "You are not connected to this user yet",
                 });
             return;
           }
 
           const roomId = getSecretRoomId(userId, targetUserId);
-          console.log(firstName + " " + text);
+          // console.log(firstName + " " + text);
 
           let chat = await ChatModel.findOne({
             participants: { $all: [userId, targetUserId] },
-          });
+          })
           if (!chat) {
             chat = new ChatModel({
               participants: [userId, targetUserId],
@@ -73,13 +73,14 @@ const initializeSocket = (server) => {
             });
           }
           chat.messages.push({ sender: userId, text });
-
+          const sender = await userModel.findById(userId).select("photoUrl");
           await chat.save();
           io.to(roomId).emit("messageReceived", {
             firstName,
             lastName,
             text,
             time,
+            photoUrl:sender?.photoUrl || null,
           });
         } catch (error) {
           console.log("Error in sending message", error);
@@ -87,7 +88,8 @@ const initializeSocket = (server) => {
       }
     );
 
-    socket.on("disconnect",async () => {
+  
+    socket.on("disconnect", async () => {
       console.log("User Disconnected");
       const userId = socket.userId;
       if (userId) {
