@@ -120,6 +120,6 @@ This project is licensed under the MIT License.
 Vinamra
 Backend Developer – MERN Stack
 
-Email: your-email@example.com  
-LinkedIn: https://linkedin.com/in/yourprofile  
-GitHub: https://github.com/your-username
+Email: vinamrasharma0523@gmail.com
+LinkedIn: https://www.linkedin.com/in/vinamrasharma/
+
